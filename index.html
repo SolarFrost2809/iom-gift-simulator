@@ -77,7 +77,6 @@
 
     <details>
     <summary>Stickers owned</summary>
-    <!-- Filled in by script.js: one box per sticker -->
     <div id="sticker-settings"></div>
   </details>
 </section>
@@ -86,17 +85,16 @@
 <img id="gift" src="images/gift.png" alt="Gift">
 
 
-<!-- Reward area: hidden at the start, shown after the gift opens. vice versa -->
+<!-- Gift Reward hidden at the start, shown after the gift opens. vice versa -->
 <div id="reward" class="hidden">
-  <!-- Placeholder-->
   <img id="reward-img" src="images/gems.png" alt="Reward">
   <p id="reward-luck" class="hidden"></p>
-  <p id="reward-text">120 Gems</p>
-  <p class="hint">Click to get another gift</p>
+  <p id="reward-text"></p>
+  <p class="hint">Click to get another gift!</p>
 </div>
 
 
-<!-- Loot Total: everything you've opened so far -->
+<!-- Loot Total: inventory to keep track of what you got so far, get from settings, gift rewards add on to it -->
 <section id="inventory">
   <h2>Loot Total </h2>
   <p class="inv-note">Refresh page (F5) to reset total loot</p>

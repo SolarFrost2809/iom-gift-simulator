@@ -1,3 +1,4 @@
+//oomf told me my comments looks like AI its fucking over
 const gift = document.getElementById("gift");
 const reward = document.getElementById("reward");
 const skipAnimation = document.getElementById("skip-animation");
@@ -77,11 +78,11 @@ function buildStickerSettings() {
   }
 }
 
-// Fill the inventory with all item from the loot table, all at 0x
+// Fill the inventory with all item from the loot table, all starting at 0x
 function buildInventory() {
   const allItems = [];
 
-  // Base
+  // Base Roll
   for (const slot of BASE_POOL) {
     if (slot.needs) {
       allItems.push(slot.yes, slot.no);
@@ -90,7 +91,7 @@ function buildInventory() {
     }
   }
 
-  // Rares
+  // Rare Roll
   for (const rare of RARE_POOL) {
     if (!rare.pickFrom) allItems.push(rare);
   }
@@ -103,7 +104,7 @@ function buildInventory() {
   }
 }
 
-// Add one opened gift's loot to the totals
+// Add the opened gift's loot to the totals loot / inventory
 function addToInventory(loot) {
   if (!inventory[loot.name]) {
     inventory[loot.name] = { image: loot.image, count: 0 };
@@ -113,7 +114,7 @@ function addToInventory(loot) {
   renderInventory();
 }
 
-//draw the inventory on the page, category by category
+// Draw the inventory on the page, category by category
 function renderInventory() {
   // Skin amount match the Settings boxes
   inventory["Miner Skin"].count = getSkinsOwned();
@@ -127,7 +128,7 @@ function renderInventory() {
 
   let html = "";
   for (const section of INVENTORY_LAYOUT) {
-    // Category title (h3) + smaller subcategory title (h4)
+    // Category title (h3) + subcategory title (h4)
     if (section.title) {
       const tag = section.sub ? "h4" : "h3";
       html += `<${tag} class="inv-title">${section.title}</${tag}>`;
@@ -195,7 +196,7 @@ function meetsNeeds(needs) {
   return true; // passed every check
 }
 
-// Turn a slot into an actual reward
+// Turn a roll slot into an actual reward
 function resolveSlot(slot) {
   if (!slot.needs) return slot; // fixed slot
   return meetsNeeds(slot.needs) ? slot.yes : slot.no; // conditional slot
@@ -243,7 +244,7 @@ function rollLuckMultiplier(itemName) {
     }
 
     if (Math.random() < chance) {
-      multi *= roll.times; //  ×3 then ×10 = ×30
+      multi *= roll.times; //  example: ×3 then ×10 = ×30
       colors.push(roll.color);
     }
   }
@@ -251,7 +252,7 @@ function rollLuckMultiplier(itemName) {
   return { multi: multi, colors: colors };
 }
 
-//Gift Reward Rolling (lets go gambling)
+// Gift Reward Rolling (lets go gambling)
 function rollGift() {
   // Base roll
   let result = resolveSlot(BASE_POOL[randomInt(0, BASE_POOL.length - 1)]);
@@ -323,7 +324,7 @@ function showReward() {
     saveSettings();
   }
 
-  addToInventory(loot); //count it in Loot Total
+  addToInventory(loot); //count it in Loot Total / inventory
 
   rewardImg.src = loot.image; // swap the picture to rolled item
   rewardText.textContent = `${loot.amount.toLocaleString()} ${loot.displayName}`;
@@ -345,6 +346,7 @@ function showReward() {
     rewardLuck.classList.remove("stacked");
   }
 
+  //Maybe TODO: maybe an animation of "shining particles" coming out. Maybe.
   gift.classList.add("hidden");
   reward.classList.remove("hidden");
 }
@@ -357,7 +359,7 @@ gift.addEventListener("click", () => {
   }
 });
 
-//show reward hide gift
+// show reward hide gift
 gift.addEventListener("animationend", () => {
   gift.classList.remove("opening");
   showReward();
@@ -369,7 +371,7 @@ reward.addEventListener("click", () => {
   gift.classList.remove("hidden");
 });
 
-//Obelisk LV stuff
+// Obelisk LV stuff
 const obeliskInput = document.getElementById("obelisk-level");
 
 function getObeliskLevel() {
@@ -377,7 +379,7 @@ function getObeliskLevel() {
   return isNaN(level) || level < 1 ? 1 : level; // empty or invalid goes to 1
 }
 
-//logging purpose
+//test log
 obeliskInput.addEventListener("change", () => {
   obeliskInput.value = getObeliskLevel(); //failsafe
   console.log("Obelisk Level:", getObeliskLevel());
@@ -397,7 +399,6 @@ worldSelect.addEventListener("change", () => {
 //Black Hole stuff
 const blackHoleCheckbox = document.getElementById("black-hole");
 
-// true if ticked, false if not
 function hasBlackHole() {
   return blackHoleCheckbox.checked;
 }
@@ -407,10 +408,10 @@ blackHoleCheckbox.addEventListener("change", () => {
   console.log("Black Hole unlocked:", hasBlackHole());
 });
 
-//Saving Settings (localStorage)
+// Saving Settings (localStorage)
 const SETTINGS_KEY = "giftSimSettings";
 
-//save settings to browser
+// Save settings to browser
 function saveSettings() {
   const stickers = {};
   for (const name in stickerInputs) {
@@ -426,7 +427,7 @@ function saveSettings() {
     gilded: getGildedOwned(),
     stickers: stickers,
   };
-  // turn the object into text
+  // Turn the object into text
   try {
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
   } catch (e) {}
@@ -436,7 +437,7 @@ function saveSettings() {
 function loadSettings() {
   let saved;
   try {
-    saved = JSON.parse(localStorage.getItem(SETTINGS_KEY)); // text go back to object again
+    saved = JSON.parse(localStorage.getItem(SETTINGS_KEY)); // Text go back to object again
   } catch (e) {
     return;
   }

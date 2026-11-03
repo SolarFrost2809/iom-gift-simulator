@@ -2,9 +2,9 @@
 
 // Multipliers
 // Items without "multi" are never multiplied.
-//   scalesWithObelisk   - × (1 + Obelisk × 0.08)
+//   scalesWithObelisk - × (1 + Obelisk × 0.08)
 //   scalesWithAscension - × (Ascension + 1)
-//   bonuses             - extra × once you reach that Obelisk (they STACK)
+//   bonuses - extra mult once you reach that Obelisk (they STACKS)
 
 const MULTIPLIERS = {
   skillBit: {
@@ -245,12 +245,12 @@ const RARE_POOL = [
     name: "Drone Fuel",
     oneIn: 30,
     image: "images/drone-fuel.png",
-    // the amount depends on Obelisk Level (wiki footnote 2 said so dont blame me blame the wikiers)
+    // the amount depends on Obelisk Level (wiki footnote 2 said so dont blame me blame the wikiers, hi Painrezor)
     // 41 + round((Obelisk − 18) × 2) +- 10, minimum 30
     rollAmount: (level) => {
       const center = 41 + Math.round((level - 18) * 2); // middle of the range
       const amount = randomInt(center - 10, center + 10); // +-10 around it
-      return Math.max(30, amount); // never below 30
+      return Math.max(30, amount); 
     },
   },
   {
@@ -316,7 +316,7 @@ const RARE_POOL = [
     max: 2,
     oneIn: 85,
     needs: { obelisk: 3, stickerAvailable: true },
-    pickFrom: STICKER_POOL, // on a hit, pick 1 unlocked sticker at equal chance
+    pickFrom: STICKER_POOL, // on a hit, pick 1 unlocked sticker at equal chance (1/sticker available)
   },
   {
     name: "Buttery Lobster",
@@ -438,11 +438,11 @@ const INVENTORY_LAYOUT = [
 //rng multipliers
 const LUCK_MULTIPLIERS = [
   { times: 3, oneIn: 20, color: "#7dff7a" },
-  { times: 10, sticker: true, color: "#8a5cff" }, // numStickers × 0.5% (150 stickers = 75%)
+  { times: 10, sticker: true, color: "#8a5cff" },
   { times: 50, oneIn: 2500, color: "#ffe14d" },
 ];
 
-//sticker 10x
+//sticker 10x mult
 const STICKER_BOOST = {
   Gems: "Gem Stickers",
   "Relic Chests": "Relic Stickers",
@@ -454,4 +454,5 @@ const STICKER_BOOST = {
   "Cosmic Candy": "Candy Stickers",
   Frogspawn: "Frogspawn Stickers",
 };
-//small note for future Solar, yeah the prettify addon  just remove the "" for some reason
+//small note for future Solar, yeah the prettify addon just remove the "" for some reason
+// so "Gems:" gets prettified to Gems:, i mean it still works 

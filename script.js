@@ -373,12 +373,13 @@ reward.addEventListener("click", () => {
 
 // Obelisk LV stuff
 const obeliskInput = document.getElementById("obelisk-level");
+const MAX_OBELISK = 75;
 
 function getObeliskLevel() {
   const level = parseInt(obeliskInput.value); // "37" -> 37
-  return isNaN(level) || level < 1 ? 1 : level; // empty or invalid goes to 1
+  if (isNaN(level)) return 1; // empty or invalid goes to 1
+  return Math.min(MAX_OBELISK, Math.max(1, level)); // 1 to 75
 }
-
 //test log
 obeliskInput.addEventListener("change", () => {
   obeliskInput.value = getObeliskLevel(); //failsafe

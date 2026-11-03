@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+
+<!-- DISCLAIMERS: ALL ASSETS IS FROM ALEX AND TEAM CHECKBOX, NO ART BELONGS TO ME, NOR WAS PUT IN AI TOOLS -->
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IOM Gift Simulator</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link rel ="stylesheet" href="style.css">
+
+</head>
+
+<body>
+<h1> <a href = "https://play.google.com/store/apps/details?id=com.checkbox.minershminer" target = "_blank" rel="noopener">Idle Obelisk Miner</a> Gift Simulator</h1>
+<h2>Because the codes and Obelisk rewards is not enough and you want more.</h2>
+
+
+<!-- Settings panel -->
+<section id="settings">
+  <h2>Settings</h2>
+
+  <div class="setting-row">
+    <label for="obelisk-level">
+      Obelisk :
+      <input type="number" id="obelisk-level" value="1" min="1">
+    </label>
+
+    <label for="skip-animation">
+      <input type="checkbox" id="skip-animation">
+      Skip opening animation
+    </label>
+  </div>
+
+  <div class="setting-row">
+    <label for="highest-world">
+      Highest World :
+      <select id="highest-world">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
+    </label>
+
+    <label for="black-hole">
+      <input type="checkbox" id="black-hole">
+      Black Hole 1 unlocked?
+    </label>
+  </div>
+
+  <label for="ascension">
+    Ascension :
+    <select id="ascension">
+      <option value="0">0</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+    </select>
+  </label>
+
+  <div class="setting-row">
+    <label for="skins-owned">
+      Skins :
+      <input type="number" id="skins-owned" value="0" min="0" max="13"> / 13
+    </label>
+
+    <label for="gilded-owned">
+      Gilded :
+      <input type="number" id="gilded-owned" value="0" min="0" max="13"> / 13
+    </label>
+  </div>
+
+    <details>
+    <summary>Stickers owned</summary>
+    <!-- Filled in by script.js: one box per sticker -->
+    <div id="sticker-settings"></div>
+  </details>
+</section>
+
+
+<img id="gift" src="images/gift.png" alt="Gift">
+
+
+<!-- Reward area: hidden at the start, shown after the gift opens. vice versa -->
+<div id="reward" class="hidden">
+  <!-- Placeholder-->
+  <img id="reward-img" src="images/gems.png" alt="Reward">
+  <p id="reward-luck" class="hidden"></p>
+  <p id="reward-text">120 Gems</p>
+  <p class="hint">Click to get another gift</p>
+</div>
+
+
+<!-- Loot Total: everything you've opened so far -->
+<section id="inventory">
+  <h2>Loot Total </h2>
+  <p class="inv-note">Refresh page (F5) to reset total loot</p>
+  <p>Gifts opened: <span id="gifts-opened">0</span></p>
+
+  <!-- Filled in by script.js: one box per item -->
+  <div id="inventory-grid"></div>
+</section>
+
+<script src="loot-table.js"></script>
+<script src="script.js"></script>
+</body>
+
+<footer id="credits">
+  <p>Made by <span class="solar">Solar</span><span class="frost">Frost</span></p>
+  <p>Idle Obelisk Miner and its assets belong to Alex and the Checkbox Entertainment team.</p>
+  <p>Fan-made project, not affiliated with the game.</p>
+</footer>
+</html>

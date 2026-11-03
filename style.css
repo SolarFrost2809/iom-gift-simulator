@@ -1,0 +1,389 @@
+body {
+    margin:0;
+    min-height: 100vh;
+
+
+
+    background-color: #14161c;                      
+    background-image: 
+    linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5))
+    ,url("images/background.png"); 
+    background-size: cover;          
+    background-position: center;     
+    background-repeat: no-repeat;    
+    background-attachment: fixed;
+
+
+    font-family: "Share Tech Mono", monospace;
+
+
+    color: white;
+    text-shadow:
+    2px 0 0 black,
+    -2px 0 0 black,
+    0 2px 0 black,
+    0 -2px 0 black;
+
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 20px;
+    letter-spacing: 1px;
+    text-align: center;
+
+}
+
+
+#gift {
+  width: clamp(220px, 35vw, 420px); /* big, but grows/shrinks with the screen */
+  image-rendering: pixelated;    
+  cursor:pointer;
+  transition: transform 0.1s;
+
+    filter:
+    drop-shadow(4px 0 0 white)
+    drop-shadow(-4px 0 0 white)
+    drop-shadow(0 4px 0 white)
+    drop-shadow(0 -4px 0 white);
+
+    margin: 30px 0;
+}
+
+#gift:hover {
+  transform: scale(1.05);
+}
+
+#gift:active{
+    transform: scale(0.95);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Gift animation (not accurate to IOM but who gaf */
+@keyframes open-gift {
+  0%   { transform: rotate(0deg); }
+  15%  { transform: rotate(-10deg); }
+  30%  { transform: rotate(10deg); }
+  45%  { transform: rotate(-10deg); }
+  60%  { transform: rotate(10deg); opacity: 1; }
+  100% { transform: scale(1.5); opacity: 0; }   /* open animation */
+}
+
+#gift.opening {
+  animation: open-gift 0.8s ease-in forwards; 
+  pointer-events: none;                       /* ignore extra clicks while animation is playing */
+}
+
+/* Reward  */
+#reward {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;                   /* clickable, to go back to the gift */
+  animation: pop-in 0.4s ease-out;   
+}
+
+@keyframes pop-in {
+  from { transform: scale(0.3); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+#reward-img {
+  width: clamp(120px, 20vw, 220px);  
+  image-rendering: pixelated;       
+  filter:                           
+    drop-shadow(2px 0 0 white)
+    drop-shadow(-2px 0 0 white)
+    drop-shadow(0 2px 0 white)
+    drop-shadow(0 -2px 0 white);
+}
+
+#reward-text {
+  font-size: 1.8rem;                 /* make the loot name stand out */
+  margin: 0;
+}
+
+.hint {
+  font-size: 0.9rem;
+  opacity: 0.7;                      
+}
+
+
+
+/* Settings panel */
+#settings, #inventory {
+  background: rgba(0, 0, 0, 0.6);  
+  border: 3px solid white;         
+  border-radius: 10px;             
+  padding: 12px 24px;              
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;    
+}
+
+#settings h2, #inventory h2 {
+  margin: 0 0 10px 0;              
+  font-size: 1.2rem;
+  color: #f5b942;                  
+}
+
+#settings label {
+  font-size: 1.3rem;
+}
+
+/* Obelisk + world */
+#obelisk-level, #highest-world, #ascension, #skins-owned,
+#gilded-owned, .sticker-setting input {
+  font-family: inherit;            
+  font-size: 1.3rem;
+  width: 80px;
+  padding: 4px 8px;
+  margin-left: 6px;                
+  text-align: center;
+
+  background: #14161c;             
+  color: white;
+  border: 2px solid #f5b942;       
+  border-radius: 6px;
+  text-shadow: none;              
+}
+
+#skins-owned,
+#gilded-owned {
+  width: 60px;
+}
+
+#obelisk-level:focus, #highest-world:focus, #ascension:focus {
+  outline: none;                   
+  box-shadow: 0 0 8px #f5b942;     
+}
+
+#highest-world, #ascension {
+  cursor: pointer;  
+}
+
+/* The checkbox */
+#settings input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: #f5b942;
+  vertical-align: middle;          
+  cursor: pointer;
+}
+
+#settings label:has(input[type="checkbox"]) {
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+
+#settings details {
+  align-self: center;
+  text-align: center;
+}
+#sticker-settings {
+  justify-content: center;
+}
+
+.setting-row {
+  display: flex;
+  flex-direction: row;       
+  align-items: center;       
+  justify-content: flex-start;   
+  gap: 24px;                 
+  flex-wrap: wrap;      }
+
+  #reward-text.rare {
+  color: #f5b942;
+  text-shadow:
+    2px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black,  
+    0 0 12px #f5b942;                                             
+}
+
+
+/* Loot Total Panel */
+#inventory {
+  width: min(700px, 100% - 32px); /* up to 700px, but never wider than the screen */
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+#inventory-grid {
+  width: 100%; /* fixes the "one column" squeeze */
+}
+
+.inv-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 90px);
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+/* Category titles */
+h3.inv-title {
+  margin: 16px 0 8px 0;
+  font-size: 1.1rem;
+  color: #f5b942;                                
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2); 
+  padding-bottom: 4px;
+}
+
+/* Subcategory titles: smaller, faded, a bit indented */
+h4.inv-title {
+  margin: 10px 0 6px 8px;
+  font-size: 0.95rem;
+  opacity: 0.8;
+}
+
+/* One item box */
+.inv-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px;
+  background: rgba(255, 255, 255, 0.05); /* very faint box */
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.inv-item img {
+  width: 40px;
+  height: 40px;
+  image-rendering: pixelated;
+}
+
+/* Items haven't got yet: faded */
+.inv-item.empty {
+  opacity: 0.35;
+}
+
+
+
+/* Stickers  */
+#settings summary {
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+
+
+#sticker-settings {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 8px 16px; /* 8px between rows, 16px between columns */
+  margin-top: 10px;
+}
+
+/* One sticker: icon + number box side by side */
+.sticker-setting {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sticker-setting img {
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+}
+
+.sticker-setting input {
+  width: 70px;
+  margin-left: 0;
+}
+
+#reward-luck {
+  margin: 0;
+  font-size: 2.2rem;
+  text-shadow: none; 
+  filter:            /* drop-shadow for the black outline*/
+    drop-shadow(2px 0 0 black)
+    drop-shadow(-2px 0 0 black)
+    drop-shadow(0 2px 0 black)
+    drop-shadow(0 -2px 0 black);
+}
+
+/* Stacked multipliers */
+#reward-luck.stacked {
+  color: transparent;            
+  background-clip: text;         
+  -webkit-background-clip: text; 
+  background-size: 200% 100%;    
+  animation: luck-slide 1.5s linear infinite;
+}
+
+/* gradient animation */
+@keyframes luck-slide {
+  from { background-position: 0% 50%; }
+  to   { background-position: 200% 50%; }
+}
+
+.inv-note {
+  margin: -6px 0 6px 0; /* pull it up closer to the title */
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+
+/* Credits*/
+#credits {
+  margin: 20px 0 30px 0;
+  font-size: 0.85rem;
+  opacity: 1; 
+}
+
+#credits p {
+  margin: 4px 0;
+  opacity: 1; 
+}
+  #credits p:has(.solar) {
+    opacity: 1; 
+  }
+
+#credits a {
+  color: #f5b942; 
+  text-decoration: none;
+}
+
+#credits a:hover {
+  text-decoration: underline;
+}
+
+/*SF stuff, sorry I have a being pretty and stylish thing going on ignore this part */
+  #credits a:hover .solar,
+  #credits a:hover .frost {
+    animation-duration: 0.8s;
+  }
+
+
+#credits .solar,
+#credits .frost {
+  display: inline-block;          
+  background-size: 200% 100%;      
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;              
+  text-shadow: none;               
+  filter:                          
+    drop-shadow(1px 0 0 black)
+    drop-shadow(-1px 0 0 black)
+    drop-shadow(0 1px 0 black)
+    drop-shadow(0 -1px 0 black);
+  animation: name-shine 2s linear infinite;
+}
+#credits .solar {
+  background-image: linear-gradient(90deg, #ff7a18, #ffd36e, #ff7a18);
+}
+#credits .frost {
+  background-image: linear-gradient(90deg, #00c6ff, #c8f8ff, #00c6ff);
+}
+@keyframes name-shine {
+  from { background-position: 0% 50%; }
+  to   { background-position: 200% 50%; }
+}

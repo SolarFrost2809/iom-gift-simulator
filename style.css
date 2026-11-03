@@ -140,7 +140,7 @@ body {
 
 /* Obelisk + world */
 #obelisk-level, #highest-world, #ascension, #skins-owned,
-#gilded-owned, .sticker-setting input {
+#gilded-owned, .sticker-setting input, #bomb-cap {
   font-family: inherit;            
   font-size: 1.3rem;
   width: 80px;
@@ -168,6 +168,10 @@ body {
 #highest-world, #ascension {
   cursor: pointer;  
 }
+
+#bomb-cap {
+  width: 150px;
+} /* cuz bomb cap amount can be big */
 
 /* The checkbox */
 #settings input[type="checkbox"] {

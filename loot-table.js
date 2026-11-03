@@ -126,6 +126,14 @@ const BASE_POOL = [
       min: 1500,
       max: 2750,
       image: "images/cherry-bomb.png",
+
+      // Formula for Cherry Charges : (Obelisk - 36) / 6 x roll + round(BombCap / 100)
+      rollAmount: (level, item) => {
+        const roll = randomInt(item.min, item.max);
+        const fromObelisk = ((level - 36) / 6) * roll;
+        const fromBombCap = Math.round(getBombCap() / 100);
+        return Math.max(0, Math.round(fromObelisk + fromBombCap));
+      },
     },
     no: {
       name: "Minutes 2x Game Speed",
@@ -250,7 +258,7 @@ const RARE_POOL = [
     rollAmount: (level) => {
       const center = 41 + Math.round((level - 18) * 2); // middle of the range
       const amount = randomInt(center - 10, center + 10); // +-10 around it
-      return Math.max(30, amount); 
+      return Math.max(30, amount);
     },
   },
   {
@@ -356,18 +364,26 @@ const RARE_POOL = [
     min: 1,
     max: 1,
     oneIn: 200,
-    needs: { skinAvailable: true },
     noLuck: true,
     image: "images/miner-skin.png",
+    swapNeeds: { skinAvailable: true },
+    swapTo: {
+      name: "Gems",
+      min: 80,
+      max: 130,
+      multi: "gem",
+      image: "images/gems.png",
+    },
   },
   {
     name: "Miner Gilded Skin",
     min: 1,
     max: 1,
     oneIn: 2000,
-    needs: { gildedAvailable: true },
     noLuck: true,
     image: "images/miner-gilded-skin.png",
+    swapNeeds: { gildedAvailable: true },
+    swapTo: { name: "Gifts", min: 25, max: 25, image: "images/gift.png" },
   },
   {
     name: "Divine Chest",
@@ -455,4 +471,4 @@ const STICKER_BOOST = {
   Frogspawn: "Frogspawn Stickers",
 };
 //small note for future Solar, yeah the prettify addon just remove the "" for some reason
-// so "Gems:" gets prettified to Gems:, i mean it still works 
+// so "Gems:" gets prettified to Gems:, i mean it still works

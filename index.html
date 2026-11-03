@@ -19,7 +19,7 @@
 <body>
 <h1> <a href = "https://play.google.com/store/apps/details?id=com.checkbox.minershminer" target = "_blank" rel="noopener">Idle Obelisk Miner</a> Gift Simulator</h1>
 <h2>Because the codes and Obelisk rewards is not enough and you want more.</h2>
-
+<h3>Or you are just sad about your rolls from a bunch of gifts in the real game.</h3>
 
 <!-- Settings panel -->
 <section id="settings">
@@ -54,14 +54,21 @@
     </label>
   </div>
 
-  <label for="ascension">
-    Ascension :
-    <select id="ascension">
-      <option value="0">0</option>
-      <option value="1">1</option>
-      <option value="2">2</option>
-    </select>
-  </label>
+  <div class="setting-row">
+    <label for="ascension">
+      Ascension :
+      <select id="ascension">
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+      </select>
+    </label>
+
+    <label for="bomb-cap">
+      Bomb Cap :
+      <input type="number" id="bomb-cap" value="0" min="0">
+    </label>
+  </div>
 
   <div class="setting-row">
     <label for="skins-owned">

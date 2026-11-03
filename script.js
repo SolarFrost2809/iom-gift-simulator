@@ -28,6 +28,22 @@ function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+// Compact big numbers into smaller notations 2,340,000,000 = 2.34b
+function compactNumber(n) {
+  const numericUnits = [
+    { value: 1e12, suffix: "t" }, // trillion
+    { value: 1e9, suffix: "b" }, // billion
+    { value: 1e6, suffix: "m" }, // million
+  ];
+
+  for (const unit of numericUnits) {
+    if (n >= unit.value) {
+      const shortNum = Math.floor((n / unit.value) * 100) / 100; // round down and keep 2 decimal
+      return shortNum + unit.suffix;
+    }
+  }
+  return n.toLocaleString(); // normal number (comma)
+}
 function getAscension() {
   return parseInt(ascensionSelect.value);
 }
@@ -145,11 +161,11 @@ function renderInventory() {
 
       const emptyClass = item.count === 0 ? "empty" : "";
       html += `
-        <div class="inv-item ${emptyClass}" title="${name}">
+        <div class="inv-item ${emptyClass}" title="${name}: ${item.count.toLocaleString()}">
           <img src="${item.image}" alt="${name}">
-          <span>x${item.count.toLocaleString()}</span>
+          <span>x${compactNumber(item.count)}</span> 
         </div>`;
-    }
+    } // this part is to show number compacted
     html += `</div>`;
   }
 
@@ -263,14 +279,15 @@ function rollGift() {
     if (!meetsNeeds(rare.needs)) continue; // doesn't qualify
 
     if (Math.random() < 1 / rare.oneIn) {
-      result = rare; // replace if hit
+      result = rare.swapTo && !meetsNeeds(rare.swapNeeds) ? rare.swapTo : rare; // replace if hit
       isRare = true;
     }
   }
   // Min Max and Drone Fuel
   let amount = result.rollAmount
-    ? result.rollAmount(getObeliskLevel())
+    ? result.rollAmount(getObeliskLevel(), result)
     : randomInt(result.min, result.max);
+
   let name = result.name;
   let image = result.image;
 
@@ -409,6 +426,21 @@ blackHoleCheckbox.addEventListener("change", () => {
   console.log("Black Hole unlocked:", hasBlackHole());
 });
 
+//Bomb cap stuff
+const bombCapInput = document.getElementById("bomb-cap");
+
+// bomb cap as a number - same rule for invalids = 0
+function getBombCap() {
+  const n = parseInt(bombCapInput.value);
+  return isNaN(n) ? 0 : Math.max(0, n);
+}
+
+//clean up + test log
+bombCapInput.addEventListener("change", () => {
+  bombCapInput.value = getBombCap();
+  console.log("Bomb Capped at", getBombCap());
+});
+
 // Saving Settings (localStorage)
 const SETTINGS_KEY = "giftSimSettings";
 
@@ -427,6 +459,7 @@ function saveSettings() {
     skins: getSkinsOwned(),
     gilded: getGildedOwned(),
     stickers: stickers,
+    bombCap: getBombCap(),
   };
   // Turn the object into text
   try {
@@ -459,6 +492,8 @@ function loadSettings() {
       if (stickerInputs[name]) stickerInputs[name].value = saved.stickers[name];
     }
   }
+  if (saved.bombCap !== undefined) bombCapInput.value = saved.bombCap;
+
   obeliskInput.value = getObeliskLevel(); // clean up
 }
 

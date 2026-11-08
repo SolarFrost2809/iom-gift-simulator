@@ -54,8 +54,6 @@ h1 a:hover {
     drop-shadow(-4px 0 0 white)
     drop-shadow(0 4px 0 white)
     drop-shadow(0 -4px 0 white);
-
-    margin: 30px 0;
 }
 
 #gift:hover {
@@ -68,6 +66,10 @@ h1 a:hover {
 
 .hidden {
   display: none !important;
+}
+
+.invisible {
+  visibility: hidden;
 }
 
 /* Gift animation (not accurate to IOM but who gaf) */
@@ -85,6 +87,15 @@ h1 a:hover {
   pointer-events: none; /* ignore extra clicks while animation is playing, prevent spam, there is a toggle to skip tho */
 }
 
+#area-for-the-gift {
+  height: clamp(340px, 40vw, 460px); 
+  width: 100%;
+  display: flex;
+  align-items: center;      
+  justify-content: center;  
+}
+
+
 /* Reward */
 #reward {
   display: flex;
@@ -92,11 +103,7 @@ h1 a:hover {
   align-items: center;
   gap: 10px;
   cursor: pointer; /* clickable, to go back to the gift */
-  animation: pop-in 0.4s ease-out;   
-}
-
-#reward.fast {
-  animation-duration: 0.2s;
+animation: pop-in var(--pop-time, 0.4s) ease-out; /* duration set by the speed button */ 
 }
 
 @keyframes pop-in {
@@ -105,7 +112,9 @@ h1 a:hover {
 }
 
 #reward-img {
-  width: clamp(120px, 20vw, 220px);  
+  width: clamp(120px, 20vw, 220px);
+  height: clamp(120px, 20vw, 220px); 
+  object-fit: contain;  
   image-rendering: pixelated;       
   filter:                           
     drop-shadow(2px 0 0 white)
@@ -143,6 +152,18 @@ h1 a:hover {
   -webkit-background-clip: text; 
   background-size: 200% 100%;    
   animation: gradient-slide 1.5s linear infinite;
+}
+
+#reward-luck-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.luck-icon {
+  width: 40px;
+  height: 40px;
+  image-rendering: pixelated;
 }
 
 .hint {
@@ -197,7 +218,7 @@ h1 a:hover {
 /* Auto Open Stuff */
 #auto-open {
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: center;
   gap: 28px;
   flex-wrap: wrap;
@@ -214,9 +235,10 @@ h1 a:hover {
   border-radius: 4px;
   cursor: pointer;
 }
-#speed-btn.fast {
-  background: #2fae3a; /*enabled turns to green while 2x*/
-}
+#speed-btn[data-speed="2"] { background: #2fae3a; } /* green */
+#speed-btn[data-speed="3"] { background: #8a5cff; } /* purple */
+#speed-btn[data-speed="4"] { background: #ff8c1a; } /* orange */
+
 .toggle {
   display: flex;
   flex-direction: column;
@@ -273,9 +295,30 @@ h1 a:hover {
   outline-offset: 2px;
 }
 
+/* Auto Open: Pause on Multi toggle + its dropdown */
+.multi-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Min Multi Dropdown*/
+.multi-threshold {
+  display: none;
+  flex-direction: column; 
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+}
+
+.multi-column:has(#pause-multi:checked) .multi-threshold {
+  display: flex;
+}
+
 /* Setting + inputs */
 #obelisk-level, #highest-world, #ascension, #skins-owned,
-#gilded-owned, .sticker-setting input, #bomb-cap {
+#gilded-owned, .sticker-setting input, #bomb-cap, #multi-threshold {
   font-family: inherit;            
   font-size: 1.3rem;
   width: 80px;
@@ -296,7 +339,7 @@ h1 a:hover {
 }
 
 #obelisk-level:focus, #highest-world:focus, #ascension:focus, #skins-owned:focus,
-#gilded-owned:focus, .sticker-setting input:focus, #bomb-cap:focus {
+#gilded-owned:focus, .sticker-setting input:focus, #bomb-cap:focus, #multi-threshold:focus {
   outline: none;                   
   box-shadow: 0 0 8px #f5b942;     
 }
@@ -308,6 +351,12 @@ h1 a:hover {
 #bomb-cap {
   width: 150px;
 } /* cuz bomb cap amount can be big */
+
+#multi-threshold {
+  width: 110px; /* room for ×1500 + the arrow */
+  font-size: 1rem;
+  cursor: pointer;
+}
 
 /* The checkboxes */
 #settings input[type="checkbox"] {
@@ -400,8 +449,6 @@ h4.inv-title {
   opacity: 0.35;
 }
 
-
-
 /* Stickers */
 #sticker-settings {
   display: grid;
@@ -449,6 +496,106 @@ h4.inv-title {
   vertical-align: middle;   
   margin: 0 10px;
   image-rendering: pixelated;
+}
+
+
+
+
+/* Big Reward Log, *BIG SHOT plays in the bg*/
+#reward-log {
+  position: fixed;   
+  right: 0;
+  top: 120px;
+  z-index: 10;
+  display: flex;
+  align-items: flex-start;
+  text-align: left;
+}
+
+/* The tab that sticks out */
+#log-tab {
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 10px 8px;
+  background: #f5b942;
+  color: black;
+  text-shadow: none;
+  border: 2px solid black;
+  border-right: none;
+  border-radius: 8px 0 0 8px;
+  cursor: pointer;
+}
+
+#log-panel {
+  display: none;
+  width: min(280px, 75vw);
+  overflow-y: auto;
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.85);
+  border: 3px solid white;
+  border-right: none;
+  border-radius: 10px 0 0 10px;
+}
+
+#reward-log.open #log-panel {
+  display: block;
+}
+#log-panel h2 {
+  margin: 0 0 10px 0;
+  font-size: 1.1rem;
+  color: #f5b942;
+}
+
+/* Log List */
+#log-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+/* One entry: number, icon, text in a row */
+#log-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+#log-list li img {
+  width: 28px;
+  height: 28px;
+  image-rendering: pixelated;
+}
+
+.log-num {
+  opacity: 0.6; 
+  color: #4aa3ff;
+}
+
+#log-list li.rare {
+  color: #f5b942;
+}
+
+.log-empty {
+  opacity: 0.6;
+}
+
+/* Multiplier in the log */
+.log-multi {
+  display: inline-block; 
+  text-shadow: none;
+  filter:
+    drop-shadow(1px 0 0 black)
+    drop-shadow(-1px 0 0 black)
+    drop-shadow(0 1px 0 black)
+    drop-shadow(0 -1px 0 black);
+}
+.log-multi.stacked {
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  background-size: 200% 100%;
+  animation: gradient-slide 1.5s linear infinite; /* the same animation as the reward */
 }
 
 /* Credits*/

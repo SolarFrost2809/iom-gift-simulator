@@ -26,6 +26,9 @@ const stickerInputs = {};
 
 const rewardLuck = document.getElementById("reward-luck");
 
+const luckRow = document.getElementById("reward-luck-row");
+const luckIcons = luckRow.querySelectorAll(".luck-icon");
+
 //Random whole number
 function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -121,6 +124,10 @@ function buildInventory() {
       inventory[item.name] = { image: item.image, count: 0 };
     }
   }
+  // Mutlipliers Tracker
+  for (const proc of MULTI_PROCS) {
+    inventory[proc.name] = { image: proc.image, count: 0 };
+  }
 }
 
 // Add the opened gift's loot to the totals loot / inventory
@@ -130,6 +137,12 @@ function addToInventory(loot) {
   }
   inventory[loot.name].count += loot.amount;
   giftsOpened++;
+
+  //count the multiplier whenever one hit
+  if (loot.luckMulti > 1) {
+    const proc = MULTI_PROCS.find((p) => p.multi === loot.luckMulti);
+    inventory[proc.name].count++;
+  }
   renderInventory();
 }
 
@@ -346,6 +359,7 @@ function showReward() {
   }
 
   addToInventory(loot); //count it in Loot Total / inventory
+  logReward(loot); // note it in the Big Rewards log, if it's big
 
   rewardImg.src = loot.image; // swap the picture to rolled item
   rewardText.textContent = `${loot.amount.toLocaleString()} ${loot.displayName}`;
@@ -353,7 +367,13 @@ function showReward() {
 
   const colors = loot.luckColors;
   rewardLuck.textContent = `×${loot.luckMulti}!`;
-  rewardLuck.classList.toggle("hidden", colors.length === 0); // hide when there's no multiplier
+  luckRow.classList.toggle("invisible", colors.length === 0); // hide/show the whole row (icons + text)
+
+  // Set both icons to according multiplier pic
+  if (loot.luckMulti > 1) {
+    const proc = MULTI_PROCS.find((p) => p.multi === loot.luckMulti);
+    luckIcons.forEach((icon) => (icon.src = proc.image));
+  }
 
   if (colors.length > 1) {
     // Stacked: gradient through every color
@@ -462,17 +482,21 @@ const pauseMulti = document.getElementById("pause-multi");
 
 let autoTimer = null; //null = stopped, else timer runnning and waiting to open gift
 const AUTO_DELAY = 700; //ms between gift, making it a variable just in case I can use it
-let fastSpeed = false; //2x speed check
+let speedLevel = 1; // 1x, 2x, 3x or 4x
+const MAX_SPEED = 4;
 
+// 700ms at 1x, 350 at 2x, ~233 at 3x, 175 at 4x
 function getAutoDelay() {
-  return fastSpeed ? AUTO_DELAY / 2 : AUTO_DELAY;
+  return AUTO_DELAY / speedLevel;
 }
 
 // Open a single gift, then queue timer for next one
 function autoStep() {
   const loot = showReward();
   const hitRare = pauseRare.checked && loot.pauses; // only check for the one with pause: true in loot table + box ticked
-  const hitMulti = pauseMulti.checked && loot.luckMulti > 1; //any 3x, 10x, 50x, and the combos + box ticked
+  const multiThreshold = document.getElementById("multi-threshold");
+  const hitMulti =
+    pauseMulti.checked && loot.luckMulti >= parseInt(multiThreshold.value); //multi combo, with the minimum value picked.
 
   if (hitRare || hitMulti) {
     stopAuto(); // stop opening: don't queue another gift, leave this reward on
@@ -501,12 +525,69 @@ autoToggle.addEventListener("change", () => {
   }
 });
 
-//2x auto open speed button
+// Speed button: cycles 1x > 2x > 3x > 4x > 1x
 speedBtn.addEventListener("click", () => {
-  fastSpeed = !fastSpeed; // on off
-  speedBtn.textContent = fastSpeed ? "2x" : "1x";
-  speedBtn.classList.toggle("fast", fastSpeed);
-  reward.classList.toggle("fast", fastSpeed);
+  speedLevel = speedLevel === MAX_SPEED ? 1 : speedLevel + 1; // at 4 : back to 1, else +1
+  speedBtn.textContent = `${speedLevel}x`;
+  speedBtn.dataset.speed = speedLevel; // CSS picks the button color from this
+
+  // Pop-in gets faster too, so it always fits between gifts
+  reward.style.setProperty("--pop-time", `${0.4 / speedLevel}s`);
+});
+
+// BIG rewards log stuff
+const rewardLog = document.getElementById("reward-log");
+const logTab = document.getElementById("log-tab");
+const logList = document.getElementById("log-list");
+
+const LOG_MIN_MULTI = 30;
+const LOG_MAX = 100;
+
+// Define if a Gift reward is worth logging in
+function isBigReward(loot) {
+  return loot.pauses || loot.luckMulti >= LOG_MIN_MULTI;
+}
+
+// Add a gift to the top of the log
+function logReward(loot) {
+  if (!isBigReward(loot)) return;
+
+  const empty = logList.querySelector(".log-empty");
+  if (empty) empty.remove();
+
+  // Multiplier part, colored like its biggest roll (e.g. orange for ×50)
+  const colors = loot.luckColors;
+  let multiText = "";
+
+  if (colors.length > 1) {
+    // Combo (×30, ×150...): gradient through every color, back to the first
+    const gradient = `linear-gradient(90deg, ${[...colors, colors[0]].join(", ")})`;
+    multiText = `<span class="log-multi stacked" style="background-image: ${gradient}">×${loot.luckMulti}</span>`;
+  } else if (colors.length === 1) {
+    // Single roll (×3, ×10, ×50): plain color
+    multiText = `<span class="log-multi" style="color: ${colors[0]}">×${loot.luckMulti}</span>`;
+  }
+
+  // Add the new entry to the top of the list
+  logList.insertAdjacentHTML(
+    "afterbegin",
+    `
+    <li class="${loot.isRare ? "rare" : ""}">
+      <span class="log-num">#${giftsOpened.toLocaleString()}</span>
+      <img src="${loot.image}" alt="">
+      <span>${multiText} ${compactNumber(loot.amount)} ${loot.displayName}</span>
+    </li>`,
+  );
+
+  // Remove the oldest one (at the bottom)
+  if (logList.children.length > LOG_MAX) {
+    logList.lastElementChild.remove();
+  }
+}
+
+logTab.addEventListener("click", () => {
+  const isOpen = rewardLog.classList.toggle("open"); // toggle returns true if it's now ON
+  logTab.textContent = isOpen ? ">" : "< Log";
 });
 
 // Saving Settings (localStorage)

@@ -97,23 +97,32 @@
   </details>
 </section>
 
-
+<div id="area-for-the-gift">
 <img id="gift" src="images/gift.png" alt="Gift">
 
 
 <!-- Gift Reward hidden at the start, shown after the gift opens. vice versa -->
 <div id="reward" class="hidden">
   <img id="reward-img" src="images/gems.png" alt="Reward">
-  <p id="reward-luck" class="hidden"></p>
+
+  <div id="reward-luck-row" class="invisible">
+    <img class="luck-icon" src="images/3x.png" alt="">
+    <p id="reward-luck"></p>
+    <img class="luck-icon" src="images/3x.png" alt="">
+  </div>
+
   <p id="reward-text"></p>
   <p class="hint">Click to get another gift!</p>
 </div>
+</div> 
 
 <!-- smol little gift counter to see how many you have opened -->
 <div id="gift-counter">
   <img src="images/gift.png" alt="">
   <span id="gift-counter-text">0</span>
 </div>
+
+
 <!-- Auto Open stuff, auto open gifts at intervals -->
 <section id="auto-open">
   <button id="speed-btn" type="button">1x</button>
@@ -131,11 +140,27 @@
     <span class="toggle-box"></span>
   </label>
 
-  <label class="toggle">
-    <span>Pause on<br>Multi Loot</span>
-    <input type="checkbox" id="pause-multi">
-    <span class="toggle-box"></span>
-  </label>
+  <div class="multi-column">
+    <label class="toggle">
+      <span>Pause on<br>Multi Loot</span>
+      <input type="checkbox" id="pause-multi">
+      <span class="toggle-box"></span>
+    </label>
+
+    <!-- Only visible while Multi loot is ticked -->
+    <label class="multi-threshold" for="multi-threshold">
+      Minimum multiplier:
+      <select id="multi-threshold">
+        <option value="3">×3</option>
+        <option value="10">×10</option>
+        <option value="30">×30</option>
+        <option value="50">×50</option>
+        <option value="150">×150</option>
+        <option value="500">×500</option>
+        <option value="1500">×1500</option>
+      </select>
+    </label>
+  </div>
 </section>
 
 
@@ -148,13 +173,26 @@
   <div id="inventory-grid"></div>
 </section>
 
-<script src="loot-table.js"></script>
-<script src="script.js"></script>
-</body>
+<!-- Reward Log -->
+<aside id="reward-log">
+  <button id="log-tab" type="button">&lt; Log</button>
 
+  <div id="log-panel">
+    <h2>Big Rewards Log</h2>
+    <ul id="log-list">
+      <li class="log-empty">No big rewards yet.</li>
+    </ul>
+  </div>
+</aside>
+
+<!-- Credits -->
 <footer id="credits">
   <p>Made by <span class="solar">Solar</span><span class="frost">Frost</span></p>
   <p>Idle Obelisk Miner and its assets belong to Alex and the Checkbox Entertainment team.</p>
   <p>Fan-made project, not affiliated with the game.</p>
 </footer>
+
+<script src="loot-table.js"></script>
+<script src="script.js"></script>
+</body>
 </html>

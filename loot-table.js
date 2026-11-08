@@ -403,6 +403,17 @@ const RARE_POOL = [
   },
 ];
 
+//Multiplier Procs for Inventories to keep track
+const MULTI_PROCS = [
+  { multi: 3, name: "×3", image: "images/3x.png" },
+  { multi: 10, name: "×10", image: "images/10x.png" },
+  { multi: 30, name: "×30", image: "images/30x.png" },
+  { multi: 50, name: "×50", image: "images/50x.png" },
+  { multi: 150, name: "×150", image: "images/150x.png" },
+  { multi: 500, name: "×500", image: "images/500x.png" },
+  { multi: 1500, name: "×1500", image: "images/1500x.png" },
+];
+
 // Inventory layout: which items show in which category, in what order.
 const INVENTORY_LAYOUT = [
   {
@@ -458,13 +469,17 @@ const INVENTORY_LAYOUT = [
     columns: 3,
     items: STICKER_POOL.map((s) => s.name), // every sticker name, in STICKER_POOL order
   },
+  {
+    title: "Multiplier Procs:",
+    items: MULTI_PROCS.map((p) => p.name), // all 7 names, in MULTI_PROCS order
+  },
 ];
 
 //rng multipliers
 const LUCK_MULTIPLIERS = [
   { times: 3, oneIn: 20, color: "#7dff7a" },
   { times: 10, sticker: true, color: "#8a5cff" },
-  { times: 50, oneIn: 2500, color: "#ffe14d" },
+  { times: 50, oneIn: 2500, color: "#ff8c1a" },
 ];
 
 //sticker 10x mult

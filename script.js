@@ -14,6 +14,9 @@ const gildedInput = document.getElementById("gilded-owned"); //mf if you have 13
 
 const inventoryGrid = document.getElementById("inventory-grid");
 const giftsOpenedText = document.getElementById("gifts-opened");
+
+const giftCounterText = document.getElementById("gift-counter-text");
+
 let giftsOpened = 0;
 const inventory = {};
 
@@ -140,7 +143,7 @@ function renderInventory() {
     inventory[name].count = getStickerCount(name);
   }
 
-  giftsOpenedText.textContent = giftsOpened.toLocaleString();
+  giftCounterText.textContent = giftsOpened.toLocaleString();
 
   let html = "";
   for (const section of INVENTORY_LAYOUT) {
@@ -323,7 +326,7 @@ function rollGift() {
 }
 
 function showReward() {
-  const loot = rollGift(); // roll!
+  const loot = rollGift(); // roll! roll! roll the power!
 
   if (loot.name === "Miner Skin") {
     skinsInput.value = getSkinsOwned() + 1;
@@ -363,12 +366,20 @@ function showReward() {
     rewardLuck.classList.remove("stacked");
   }
 
+  // this block is purely for "auto play animation so it doesn't feel like a stiff roulette"
+  reward.style.animation = "none";
+  void reward.offsetWidth;
+  reward.style.animation = "";
+
   //Maybe TODO: maybe an animation of "shining particles" coming out. Maybe.
   gift.classList.add("hidden");
   reward.classList.remove("hidden");
+
+  return loot; //This one is for auto open to check and return loot
 }
 
 gift.addEventListener("click", () => {
+  if (autoTimer) return; // ignore manual opening if auto open is running
   if (skipAnimation.checked) {
     showReward();
   } else {
@@ -384,6 +395,7 @@ gift.addEventListener("animationend", () => {
 
 // hide reward and bring gift back for a new roll
 reward.addEventListener("click", () => {
+  if (autoTimer) return;
   reward.classList.add("hidden");
   gift.classList.remove("hidden");
 });
@@ -439,6 +451,61 @@ function getBombCap() {
 bombCapInput.addEventListener("change", () => {
   bombCapInput.value = getBombCap();
   console.log("Bomb Capped at", getBombCap());
+});
+
+//Auto Open stuff
+const autoToggle = document.getElementById("auto-toggle");
+const speedBtn = document.getElementById("speed-btn");
+const pauseRare = document.getElementById("pause-rare");
+const pauseMulti = document.getElementById("pause-multi");
+
+let autoTimer = null; //null = stopped, else timer runnning and waiting to open gift
+const AUTO_DELAY = 700; //ms between gift, making it a variable just in case I can use it
+let fastSpeed = false; //2x speed check
+
+function getAutoDelay() {
+  return fastSpeed ? AUTO_DELAY / 2 : AUTO_DELAY;
+}
+
+// Open a single gift, then queue timer for next one
+function autoStep() {
+  const loot = showReward();
+  const hitRare = pauseRare.checked && loot.isRare; // rare roll + box ticked
+  const hitMulti = pauseMulti.checked && loot.luckMulti > 1; //any 3x, 10x, 50x, and the combos + box ticked
+
+  if (hitRare || hitMulti) {
+    stopAuto(); // stop opening: don't queue another gift, leave this reward on
+    return;
+  }
+
+  autoTimer = setTimeout(autoStep, getAutoDelay());
+}
+function startAuto() {
+  gift.classList.remove("opening"); // cancel opening animation
+  autoStep();
+}
+
+function stopAuto() {
+  clearTimeout(autoTimer); // cancel the gift that was waiting to open
+  autoTimer = null;
+  autoToggle.checked = false; // unticks the box (this is for when Pause stops it later)
+}
+
+// if ticked starts it, if unticked stops
+autoToggle.addEventListener("change", () => {
+  if (autoToggle.checked) {
+    startAuto();
+  } else {
+    stopAuto();
+  }
+});
+
+//2x auto open speed button
+speedBtn.addEventListener("click", () => {
+  fastSpeed = !fastSpeed; // on off
+  speedBtn.textContent = fastSpeed ? "2x" : "1x";
+  speedBtn.classList.toggle("fast", fastSpeed);
+  reward.classList.toggle("fast", fastSpeed);
 });
 
 // Saving Settings (localStorage)

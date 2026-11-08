@@ -17,7 +17,9 @@
 </head>
 
 <body>
-<h1> <a href = "https://play.google.com/store/apps/details?id=com.checkbox.minershminer" target = "_blank" rel="noopener">Idle Obelisk Miner</a> Gift Simulator</h1>
+ 
+<h1><img class="title-gift" src="images/gift.png" alt="">  <a href = "https://play.google.com/store/apps/details?id=com.checkbox.minershminer" target = "_blank" rel="noopener">Idle Obelisk Miner</a> Gift Simulator <img class="title-gift" src="images/gift.png" alt=""></h1>
+
 <h2>Because the codes and Obelisk rewards is not enough and you want more.</h2>
 <h3>Or you are just sad about your rolls from a bunch of gifts in the real game.</h3>
 
@@ -100,12 +102,40 @@
   <p class="hint">Click to get another gift!</p>
 </div>
 
+<!-- smol little gift counter to see how many you have opened -->
+<div id="gift-counter">
+  <img src="images/gift.png" alt="">
+  <span id="gift-counter-text">0</span>
+</div>
+<!-- Auto Open stuff, auto open gifts at intervals -->
+<section id="auto-open">
+  <button id="speed-btn" type="button">1x</button>
+
+  <!-- Toggles-->
+  <label class="toggle">
+    <span>Auto<br>Open</span>
+    <input type="checkbox" id="auto-toggle">
+    <span class="toggle-box"></span>
+  </label>
+
+  <label class="toggle">
+    <span>Pause on<br>Rare Loot</span>
+    <input type="checkbox" id="pause-rare">
+    <span class="toggle-box"></span>
+  </label>
+
+  <label class="toggle">
+    <span>Pause on<br>Multi Loot</span>
+    <input type="checkbox" id="pause-multi">
+    <span class="toggle-box"></span>
+  </label>
+</section>
+
 
 <!-- Loot Total: inventory to keep track of what you got so far, get from settings, gift rewards add on to it -->
 <section id="inventory">
-  <h2>Loot Total </h2>
+  <h2>Loot Total</h2>
   <p class="inv-note">Refresh page (F5) to reset total loot</p>
-  <p>Gifts opened: <span id="gifts-opened">0</span></p>
 
   <!-- Filled in by script.js: one box per item -->
   <div id="inventory-grid"></div>

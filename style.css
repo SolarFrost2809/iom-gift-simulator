@@ -35,6 +35,13 @@ body {
 
 }
 
+h1 a {
+  color: #f5b942;
+  text-decoration: none;
+}
+h1 a:hover {
+  text-decoration: underline;
+}
 
 #gift {
   width: clamp(220px, 35vw, 420px); /* big, adapt size with the screen */
@@ -63,7 +70,7 @@ body {
   display: none !important;
 }
 
-/* Gift animation (not accurate to IOM but who gaf */
+/* Gift animation (not accurate to IOM but who gaf) */
 @keyframes open-gift {
   0%   { transform: rotate(0deg); }
   15%  { transform: rotate(-10deg); }
@@ -88,6 +95,10 @@ body {
   animation: pop-in 0.4s ease-out;   
 }
 
+#reward.fast {
+  animation-duration: 0.2s;
+}
+
 @keyframes pop-in {
   from { transform: scale(0.3); opacity: 0; }
   to   { transform: scale(1);   opacity: 1; }
@@ -107,19 +118,46 @@ body {
   font-size: 1.8rem; /* make the loot name stand out */
   margin: 0;
 }
+#reward-text.rare {
+  color: #f5b942;
+  text-shadow:
+    2px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black,  
+    0 0 12px #f5b942;                                             
+}
+
+#reward-luck {
+  margin: 0;
+  font-size: 2.2rem;
+  text-shadow: none; 
+  filter: /* drop-shadow for the black outline*/
+    drop-shadow(2px 0 0 black)
+    drop-shadow(-2px 0 0 black)
+    drop-shadow(0 2px 0 black)
+    drop-shadow(0 -2px 0 black);
+}
+
+/* Stacked multipliers */
+#reward-luck.stacked {
+  color: transparent;            
+  background-clip: text;         
+  -webkit-background-clip: text; 
+  background-size: 200% 100%;    
+  animation: gradient-slide 1.5s linear infinite;
+}
 
 .hint {
   font-size: 0.9rem;
   opacity: 0.7;                      
 }
 
-
-
-/* Settings panel */
-#settings, #inventory {
+/* panels */
+#settings, #inventory, #auto-open {
   background: rgba(0, 0, 0, 0.6);  
   border: 3px solid white;         
-  border-radius: 10px;             
+  border-radius: 10px;  
+}
+#settings, #inventory {
+           
   padding: 12px 24px;              
   text-align: center;
   display: flex;
@@ -138,7 +176,104 @@ body {
   font-size: 1.3rem;
 }
 
-/* Obelisk + world */
+/* Small gift counter badge */
+#gift-counter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 14px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid white;
+  border-radius: 8px;
+  font-size: 1.2rem;
+}
+
+#gift-counter img {
+  width: 28px;
+  height: 28px;
+  image-rendering: pixelated;
+}
+
+/* Auto Open Stuff */
+#auto-open {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 28px;
+  flex-wrap: wrap;
+  padding: 12px 20px;
+}
+#speed-btn {
+  align-self: flex-start;
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 2px 8px;
+  background: #d9363e;
+  color: white;
+  border: 2px solid black;
+  border-radius: 4px;
+  cursor: pointer;
+}
+#speed-btn.fast {
+  background: #2fae3a; /*enabled turns to green while 2x*/
+}
+.toggle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  text-align: center;
+  cursor: pointer;
+}
+.toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.toggle-box {
+  width: 44px;
+  height: 44px;
+  background: #d9363e;
+  border: 3px solid black;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.toggle-box::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  border: 3px solid #f5b942;
+  background: #2a1a10;
+}
+.toggle-box::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 45%;
+  width: 7px;
+  height: 14px;
+  border: solid white;
+  border-width: 0 4px 4px 0;
+  transform: translate(-50%, -50%) rotate(45deg); 
+  filter: drop-shadow(1px 1px 0 black); 
+  display: none;
+}
+.toggle input:checked + .toggle-box::after {
+  display: block;
+}
+
+.toggle input:focus-visible + .toggle-box {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
+/* Setting + inputs */
 #obelisk-level, #highest-world, #ascension, #skins-owned,
 #gilded-owned, .sticker-setting input, #bomb-cap {
   font-family: inherit;            
@@ -160,7 +295,8 @@ body {
   width: 60px;
 }
 
-#obelisk-level:focus, #highest-world:focus, #ascension:focus {
+#obelisk-level:focus, #highest-world:focus, #ascension:focus, #skins-owned:focus,
+#gilded-owned:focus, .sticker-setting input:focus, #bomb-cap:focus {
   outline: none;                   
   box-shadow: 0 0 8px #f5b942;     
 }
@@ -173,7 +309,7 @@ body {
   width: 150px;
 } /* cuz bomb cap amount can be big */
 
-/* The checkbox */
+/* The checkboxes */
 #settings input[type="checkbox"] {
   width: 20px;
   height: 20px;
@@ -191,9 +327,12 @@ body {
   align-self: center;
   text-align: center;
 }
-#sticker-settings {
-  justify-content: center;
+#settings summary {
+  cursor: pointer;
+  font-size: 1.1rem;
 }
+
+
 
 .setting-row {
   display: flex;
@@ -201,15 +340,8 @@ body {
   align-items: center;       
   justify-content: flex-start;   
   gap: 24px;                 
-  flex-wrap: wrap;      }
-
-  #reward-text.rare {
-  color: #f5b942;
-  text-shadow:
-    2px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black,  
-    0 0 12px #f5b942;                                             
-}
-
+  flex-wrap: wrap;  
+ }
 
 /* Loot Total Panel */
 #inventory {
@@ -271,17 +403,12 @@ h4.inv-title {
 
 
 /* Stickers */
-#settings summary {
-  cursor: pointer;
-  font-size: 1.1rem;
-}
-
-
 #sticker-settings {
   display: grid;
   grid-template-columns: repeat(3, auto);
-  gap: 8px 16px; /* 8px between rows, 16px between columns */
+  gap: 8px 16px; 
   margin-top: 10px;
+  justify-content: center;
 }
 
 /* One sticker: icon + number box side by side */
@@ -302,28 +429,10 @@ h4.inv-title {
   margin-left: 0;
 }
 
-#reward-luck {
-  margin: 0;
-  font-size: 2.2rem;
-  text-shadow: none; 
-  filter: /* drop-shadow for the black outline*/
-    drop-shadow(2px 0 0 black)
-    drop-shadow(-2px 0 0 black)
-    drop-shadow(0 2px 0 black)
-    drop-shadow(0 -2px 0 black);
-}
 
-/* Stacked multipliers */
-#reward-luck.stacked {
-  color: transparent;            
-  background-clip: text;         
-  -webkit-background-clip: text; 
-  background-size: 200% 100%;    
-  animation: luck-slide 1.5s linear infinite;
-}
 
 /* gradient animation */
-@keyframes luck-slide {
+@keyframes gradient-slide {
   from { background-position: 0% 50%; }
   to   { background-position: 200% 50%; }
 }
@@ -334,6 +443,13 @@ h4.inv-title {
   opacity: 0.7;
 }
 
+/* Small gifts on each side of the title */
+.title-gift {
+  height: 1.3em;            
+  vertical-align: middle;   
+  margin: 0 10px;
+  image-rendering: pixelated;
+}
 
 /* Credits*/
 #credits {
@@ -344,27 +460,9 @@ h4.inv-title {
 
 #credits p {
   margin: 4px 0;
-  opacity: 1; 
-}
-  #credits p:has(.solar) {
-    opacity: 1; 
-  }
-
-#credits a {
-  color: #f5b942; 
-  text-decoration: none;
-}
-
-#credits a:hover {
-  text-decoration: underline;
 }
 
 /*SF stuff, sorry I have a being pretty and stylish thing going on ignore this part */
-  #credits a:hover .solar,
-  #credits a:hover .frost {
-    animation-duration: 0.8s;
-  }
-
 
 #credits .solar,
 #credits .frost {
@@ -379,15 +477,11 @@ h4.inv-title {
     drop-shadow(-1px 0 0 black)
     drop-shadow(0 1px 0 black)
     drop-shadow(0 -1px 0 black);
-  animation: name-shine 2s linear infinite;
+  animation: gradient-slide 2s linear infinite;
 }
 #credits .solar {
   background-image: linear-gradient(90deg, #ff7a18, #ffd36e, #ff7a18);
 }
 #credits .frost {
   background-image: linear-gradient(90deg, #00c6ff, #c8f8ff, #00c6ff);
-}
-@keyframes name-shine {
-  from { background-position: 0% 50%; }
-  to   { background-position: 200% 50%; }
 }

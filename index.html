@@ -14,6 +14,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <link rel ="stylesheet" href="style.css">
 
+  <!-- Random backgrounds-->
+  <script>
+    const BACKGROUND_COUNT = 11; 
+    const bgNumber = Math.floor(Math.random() * BACKGROUND_COUNT) + 1; 
+    document.documentElement.style.setProperty("--bg", `url("images/background${bgNumber}.png")`);
+  </script>
+
 </head>
 
 <body>

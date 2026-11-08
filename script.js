@@ -320,6 +320,7 @@ function rollGift() {
     image: image,
     amount: amount,
     isRare: isRare,
+    pauses: result.pause === true,
     luckMulti: luck.multi,
     luckColors: luck.colors,
   };
@@ -470,7 +471,7 @@ function getAutoDelay() {
 // Open a single gift, then queue timer for next one
 function autoStep() {
   const loot = showReward();
-  const hitRare = pauseRare.checked && loot.isRare; // rare roll + box ticked
+  const hitRare = pauseRare.checked && loot.pauses; // only check for the one with pause: true in loot table + box ticked
   const hitMulti = pauseMulti.checked && loot.luckMulti > 1; //any 3x, 10x, 50x, and the combos + box ticked
 
   if (hitRare || hitMulti) {

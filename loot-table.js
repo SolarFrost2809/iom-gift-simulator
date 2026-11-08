@@ -283,6 +283,7 @@ const RARE_POOL = [
     min: 1,
     max: 1,
     oneIn: 100,
+    pause: true,
     image: "images/mythic-chest.png",
   },
   {
@@ -300,6 +301,7 @@ const RARE_POOL = [
     max: 2000,
     oneIn: 125,
     needs: { obelisk: 60 },
+    pause: true,
     image: "images/large-relic-chest.png",
   },
   {
@@ -324,6 +326,7 @@ const RARE_POOL = [
     max: 2,
     oneIn: 85,
     needs: { obelisk: 3, stickerAvailable: true },
+    pause: true,
     pickFrom: STICKER_POOL, // on a hit, pick 1 unlocked sticker at equal chance (1/sticker available)
   },
   {
@@ -332,6 +335,7 @@ const RARE_POOL = [
     max: 2,
     oneIn: 250,
     image: "images/buttery-lobster.png",
+    pause: true,
     funnyName: "Luttery Bobster", //this took me a bit to code in im ngl im stupid as fuckkkk
     funnyNameOneIn: 25,
   },
@@ -349,6 +353,7 @@ const RARE_POOL = [
     max: 300000,
     oneIn: 250,
     needs: { obelisk: 70 },
+    pause: true,
     image: "images/gemcano.png",
   },
   {
@@ -357,6 +362,7 @@ const RARE_POOL = [
     max: 1,
     oneIn: 1000,
     needs: { obelisk: 60 },
+    pause: true,
     image: "images/forbidden-sushi.png",
   },
   {
@@ -365,6 +371,7 @@ const RARE_POOL = [
     max: 1,
     oneIn: 200,
     noLuck: true,
+    pause: true,
     image: "images/miner-skin.png",
     swapNeeds: { skinAvailable: true },
     swapTo: {
@@ -381,6 +388,7 @@ const RARE_POOL = [
     max: 1,
     oneIn: 2000,
     noLuck: true,
+    pause: true,
     image: "images/miner-gilded-skin.png",
     swapNeeds: { gildedAvailable: true },
     swapTo: { name: "Gifts", min: 25, max: 25, image: "images/gift.png" },
@@ -390,6 +398,7 @@ const RARE_POOL = [
     min: 1,
     max: 1,
     oneIn: 2500,
+    pause: true,
     image: "images/divine-chest.png",
   },
 ];
